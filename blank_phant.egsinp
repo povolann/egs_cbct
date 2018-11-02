@@ -1,0 +1,331 @@
+# Vzdy pred simulaci promyslet a zkontrolovat:
+# 1. Je potreba simulovat blank phantom? Pro specificky CBCT setup (source/scoring-plane combination).
+# 2. Mam dobre vsechny cesty?
+# Verze 1.11.2018 - ray-tracing (ideal) - viz poznamky v sesite
+
+:start media definition:
+#AE=1
+#UE=50.511
+AP=0.001
+UP=50.
+
+# If all required media are in the file below, nothing else needed.
+
+material data file=/home/anya/EGSnrc/HEN_HOUSE/pegs4/data/material_anya.dat
+
+:stop media definition:
+
+# Trubka z PMMA s balonkem
+:start geometry definition:
+# Nejdriv nadefinuji vsechny objekty.
+:start geometry:
+        name        = krabice
+        library     = egs_box
+        box size    = 97 20 30
+        :start media input:
+        media       =  AIR521ICRU
+        :stop media input:
+:stop geometry:
+:start geometry:
+        name        = vzduch
+        library     = egs_gtransformed
+        my geometry    = krabice
+        :start transformation:
+        translation =  -38.5 0 0
+        :stop transformation:
+ :stop geometry:
+
+ :start geometry:
+        name            = bowtie
+        library         = egs_ndgeometry
+        type            = EGS_XYZGeometry
+        x-planes        = -85.0480 -85.0478 -85.0455 -85.0359 -85.0192 -84.9952 -84.9635 -84.9240 -84.8764 -84.8202 -84.7548 -84.6793 -84.5926 -84.4935 -84.3800 -84.2491 -84.0964 -83.9139 -83.6927 -83.4311 -83.1450 -82.9013 -82.7382 -82.6287 -82.6080 -82.5753 -82.5570 -82.5425 -82.5123 -82.5091 -82.4851 -82.4808
+ 
+        y-planes        = -6.88 -5.88 -4.88 -3.88 -2.88 -2.38 -2.28 -2.18 -2.08 -1.98 -1.88 -1.78 -1.68 -1.58 -1.48 -1.38 -1.28 -1.18 -1.08 -0.98 -0.88 -0.78 -0.68 -0.58 -0.48 -0.38 -0.28 -0.18 -0.08 0.02 0.12 2.11
+        z-planes        = -7 7
+        :start media input:
+            media = AIR521ICRU AL521ICRU
+            set medium = 0 1 0 31 0 1 1
+            set medium = 1 2 0 30 0 1 1
+            set medium = 2 3 0 29 0 1 1
+            set medium = 3 4 0 28 0 1 1
+            set medium = 4 5 0 27 0 1 1
+            set medium = 5 6 0 26 0 1 1
+            set medium = 6 7 0 25 0 1 1
+            set medium = 7 8 0 24 0 1 1
+            set medium = 8 9 0 23 0 1 1
+            set medium = 9 10 0 22 0 1 1
+            set medium = 10 11 0 21 0 1 1
+            set medium = 11 12 0 20 0 1 1
+            set medium = 12 13 0 19 0 1 1
+            set medium = 13 14 0 18 0 1 1
+            set medium = 14 15 0 17 0 1 1
+            set medium = 15 16 0 16 0 1 1
+            set medium = 16 17 0 15 0 1 1
+            set medium = 17 18 0 14 0 1 1
+            set medium = 18 19 0 13 0 1 1
+            set medium = 19 20 0 12 0 1 1
+            set medium = 20 21 0 11 0 1 1
+	    set medium = 21 22 0 10 0 1 1
+	    set medium = 22 23 0 9 0 1 1
+	    set medium = 23 24 0 8 0 1 1
+	    set medium = 24 25 0 7 0 1 1
+	    set medium = 25 26 1 6 0 1 1
+	    set medium = 26 27 1 5 0 1 1
+	    set medium = 27 28 2 5 0 1 1
+	    set medium = 28 29 2 5 0 1 1
+	    set medium = 29 30 2 4 0 1 1
+	    set medium = 30 31 3 4 0 1 1
+		
+          :stop media input:
+    :stop geometry:
+
+:start geometry:
+        name        = trubka
+        library     = egs_cones
+        type        = EGS_ConeStack
+        axis        = 0 0 -8.27   0 0 1    # osa valce - pocatek a smer
+        :start layer:
+            thickness       = 20        # delka valce - trochu presahuje
+            top radii       =  8.85     9
+            bottom radii    =   8.85    9
+            media           = H2O521ICRU PMMA521ICRU
+         :stop layer:
+        :stop geometry:
+
+       :start geometry:
+        name          = balonek
+        library       = egs_spheres
+        midpoint      = 0 0 -3
+        radii         = 5.9    # tohle se bude menit; polomer balonku v cm 5.9
+            :start media input:
+                media = POLYURETHANE
+            :stop media input:
+       :stop geometry:
+       
+       :start geometry:			# take se budou menit polohy kulicek
+        name          = kulicka1
+        library       = egs_spheres
+        midpoint      = 0 0 0
+        radii         = 0.8
+            :start media input:
+                media = SKLO16           
+            :stop media input:
+       :stop geometry:
+
+       :start geometry:
+        name          = kulicka2
+        library       = egs_spheres
+        midpoint      = 0 3.5 0.5
+        radii         = 0.25
+            :start media input:
+                media = SKLO5            
+            :stop media input:
+       :stop geometry:
+
+       :start geometry:
+        name          = kulicka3
+        library       = egs_spheres
+        midpoint      = 0 4 -3
+        radii         = 0.25
+            :start media input:
+                media = SKLO5            
+            :stop media input:
+       :stop geometry:
+
+       :start geometry:
+        name          = kulicka4
+        library       = egs_spheres
+        midpoint      = 0 0 -6
+        radii         = 0.25
+            :start media input:
+                media = SKLO5            
+            :stop media input:
+       :stop geometry:
+
+       :start geometry:
+        name          = kulicka5
+        library       = egs_spheres
+        midpoint      = 0 0 -4
+        radii         = 0.25
+            :start media input:
+                media = SKLO5            
+            :stop media input:
+       :stop geometry:
+
+       :start geometry:
+        name          = kulicka6
+        library       = egs_spheres
+        midpoint      = 0 -1 -3
+        radii         = 0.25
+            :start media input:
+                media = SKLO5            
+            :stop media input:
+       :stop geometry:
+
+# Ted je do sebe postupne vnorim.
+       
+       :start geometry:
+        name                 = balonekskul
+        library              = egs_genvelope
+        base geometry        = balonek
+        inscribed geometries = kulicka1 kulicka2 kulicka3 kulicka4 kulicka5 kulicka6
+       :stop geometry:
+       
+       :start geometry:
+        name                 = celyfantom
+        library              = egs_genvelope
+        base geometry        = trubka
+        inscribed geometries = balonekskul
+       :stop geometry:
+
+       :start geometry:
+        name                 = celyfantomsbowtie
+        library              = egs_genvelope
+        base geometry        = vzduch
+        inscribed geometries = celyfantom bowtie #envelope je asi 2x rychlejsi nez union
+       :stop geometry:
+
+##################################### blank phantom
+    :start geometry:
+       library = egs_ndgeometry
+       type    = EGS_XYZGeometry
+       name    = blank_phantom
+       x-slabs = -15 30 1
+       y-slabs = -15 30 1
+       z-slabs = -15 30 1
+       :start media input:
+            media = VACUUM, AIR521ICRU
+       :stop media input:
+    :stop geometry:
+
+        #simulation geometry = celyfantomsbowtie       # use this one for real scans
+        simulation geometry = blank_phantom    # use this one first to create blank scan
+
+:stop geometry definition:
+
+:start run control:
+    ncase =  12800000   # pripadne snizovat
+    calculation = first
+:stop run control:
+
+:start source definition:
+
+   ##################################
+   # A collimated source
+   ####
+   :start source:
+    library = egs_collimated_source
+    name = the_zero_collimated_source
+    distance = 100        	# source-target shape min. distance, rtg-source a izocentrum-target
+    :start source shape:
+      type = point
+      position = 0, 0, -100
+    :stop source shape:
+    :start target shape:
+       library = egs_rectangle
+       rectangle = -10.7 -24.7 10.7 3.3  # velikost pole v izocentru, ktere odpovida detektoru o 43 cm X 43 cm
+    :stop target shape:
+      :start spectrum:
+       type = tabulated spectrum
+       spectrum file = /home/anya/EGSnrc/egs_home/egs_cbct/125kVp_cbct.ensrc
+      :stop spectrum:
+      #:start spectrum:
+         type = monoenergetic     # spektrum/monoenergetic      	 
+         energy = 0.04	       	  # HVL pro 125 kV je 4,88 mm Al
+      #:stop spectrum:
+     charge = 0		 # fotony
+   :stop source:
+
+   #############################################
+   # transformations are not implemented in most
+   # sources, one must use a transformed source.
+   #############################################
+   :start source:
+    library = egs_transformed_source
+    name = the_collimated_source
+    source name = the_zero_collimated_source
+    :start transformation:
+       rotation = 0 -1.570796326794896619 0	  # angels in radians
+    :stop transformation:
+   :stop source:
+   ###########################################
+
+   simulation source = the_collimated_source
+
+:stop source definition:
+
+:start cbct setup:
+        orbit = 360.0	  # cela otocka
+        step  = 0.4     # krok ve stupnich
+        z-rotation = 0	# projekcni uhel ve stupnich
+:stop cbct setup:
+
+:start scoring options:
+
+        calculation type = planar # planar/ray-tracing
+
+        :start planar scoring:
+           minimum Kscat fraction = 0.5
+           maximum Aatt fraction = 1.
+           surrounding medium = AIR521ICRU   # VACUUM, AIR521ICRU
+           screen resolution = 1024 768
+           voxel size = 0.0388 0.0388
+           :start transformation:
+              translation = 50 -16 0 # 50 cm od izocentra, posun -16
+              rotation = 0 -1.570796326794896619 0
+           :stop transformation:
+
+            # Uses file provided in the distribution
+              muen file = /home/anya/EGSnrc/egs_home/egs_fac/examples/muen_air.data
+        :stop planar scoring:
+
+:stop scoring options:
+
+:start output options:
+    display type = total # total, attenuated, scattered
+    store data arrays = no # yes (default), no
+    :start scan output:
+        ###############################################
+        # Use the 2 lines below to produce a blank scan
+        ###############################################
+        scan file = /home/anya/EGSnrc/egs_home/egs_cbct/blank_phant.scan
+        scan type = blank
+        ###############################################
+        # Use the 3 lines below to produce real scans
+        ###############################################
+        #scan file  = /home/anya/EGSnrc/egs_home/egs_cbct/sblank/phant_.scan
+        #blank scan = /home/anya/EGSnrc/egs_home/egs_cbct/blank_phant.scan
+        #scan type  = real # all,real,scatter,ideal,blank,none
+        ###############################################
+    :stop scan output:
+:stop output options:
+
+:start rng definition:
+    type = ranmar
+    initial seeds = 1802 28838
+:stop rng definition:
+
+        ########
+	# For fast computation one can use KN for Compton scattering. However,
+	# in realistic phantoms this may cause a 3% discrepancy.
+	########
+:start MC transport parameter:
+
+  Global ECUT = 1                # no e-transport
+  Global PCUT = 0.001            # 1 keV for photons
+  Photon cross sections = xcom   # epdl (or xcom)
+  Bound Compton scattering = on  # Make sure to turn on for low energy applications.
+  Rayleigh scattering= on        # Should be turned on for low energy applications.
+
+:stop MC transport parameter:
+
+	######
+	# Not needed for blank scan calculations. 
+	# Comment out for these cases.
+	######
+:start variance reduction:
+
+   scoring type =  forced_detection  # scores photons AIMED at scoring plane
+   
+:stop variance reduction:
